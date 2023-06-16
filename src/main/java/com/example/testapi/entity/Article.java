@@ -1,10 +1,7 @@
 package com.example.testapi.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Instant;
-import java.util.List;
 import java.util.Map;
 
 @Entity(name = "article")
@@ -41,6 +36,11 @@ public class Article {
     @ElementCollection
     @Size(min = 1)
     private Map<String, String> content;
+
+    @Column
+    @JsonProperty
+    private String publisherUsername;
+
 
     @Column
 //    @JsonFormat( shape = JsonFormat.Shape.STRING , pattern = "yyyy-MM-ddTHH:mm:ssZ" )

@@ -6,6 +6,7 @@ create table article
 (
     id           bigint not null,
     author       varchar(255),
+    publisher_username       varchar(255),
     publish_date timestamp,
     title        varchar(100),
     primary key (id)
