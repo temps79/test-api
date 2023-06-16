@@ -1,5 +1,6 @@
 package com.example.testapi.service;
 
+import com.example.testapi.dto.ArticleDto;
 import com.example.testapi.entity.Article;
 import com.example.testapi.repository.ArticleRepository;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -23,8 +25,9 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 class ArticleServiceTest {
     private final ArticleRepository articleRepository = mock(ArticleRepository.class);
-    private final ArticleService articleService = new ArticleService(articleRepository);
-    private final Article article = new Article(1L, "title", "author", Map.of("1", "1"), Instant.now());
+    private final UserDetailsService userDetailsService = mock(UserDetailsService.class);
+    private final ArticleService articleService = new ArticleService(articleRepository, userDetailsService);
+    private final Article article = new Article(1L, "title", "author", Map.of("1", "1"), "user", Instant.now());
 
     @Test
     void getEmptyList() {
@@ -44,7 +47,8 @@ class ArticleServiceTest {
         Mockito.when(articleRepository.findAll(any(Pageable.class))).thenReturn(articles);
         var result = articleService.getList(page, size);
         var resultArticle = Objects.requireNonNull(result.getBody()).get(0);
-        assert (article.equals(resultArticle));
+        ArticleDto articleDto = new ArticleDto(article);
+        assert (articleDto.equals(resultArticle));
     }
 
     @Test
@@ -62,14 +66,16 @@ class ArticleServiceTest {
     void notFoundContentArticle() {
         Article copyArticle = article;
         copyArticle.setContent(null);
-        assertThrows(ResponseStatusException.class,()->articleService.saveArticle(copyArticle));
+        assertThrows(ResponseStatusException.class, () -> articleService.saveArticle(copyArticle));
     }
+
     @Test
     void notFoundPublishDateArticle() {
         Article copyArticle = article;
         copyArticle.setPublishDate(null);
-        assertThrows(ResponseStatusException.class,()->articleService.saveArticle(copyArticle));
+        assertThrows(ResponseStatusException.class, () -> articleService.saveArticle(copyArticle));
     }
+
     @Test
     void saveArticle() {
         Mockito.when(articleRepository.save(any(Article.class))).thenReturn(article);
@@ -81,20 +87,21 @@ class ArticleServiceTest {
         Mockito.when(articleRepository.findById(any(Long.class))).thenReturn(Optional.of(article));
         articleService.getData(1L);
     }
+
     @Test
     void notFoundArticleData() {
         Mockito.when(articleRepository.findById(any(Long.class))).thenReturn(Optional.empty());
-        assertThrows(ResponseStatusException.class,()->articleService.getData(1L));
+        assertThrows(ResponseStatusException.class, () -> articleService.getData(1L));
     }
 
     @Test
-    void testfindAllByPublishDateBetween(){
-        Article article = new Article(1L, "title", "author", Map.of("1", "1"), Instant.now());
-        Instant today=Instant.now().plus(1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS);
-        Instant sevenDaysBefore=today.minus(7,ChronoUnit.DAYS);
-        Mockito.when(articleRepository.findAllByPublishDateBetween(any(Instant.class),any(Instant.class))).thenReturn(List.of(article));
-        var list=articleService.findAllByPublishDateBetween(today,sevenDaysBefore);
-        assertEquals(list.size(),1);
+    void testFindAllByPublishDateBetween() {
+        Article article = new Article(1L, "title", "author", Map.of("1", "1"), "user", Instant.now());
+        Instant today = Instant.now().plus(1, ChronoUnit.DAYS).truncatedTo(ChronoUnit.DAYS);
+        Instant sevenDaysBefore = today.minus(7, ChronoUnit.DAYS);
+        Mockito.when(articleRepository.findAllByPublishDateBetween(any(Instant.class), any(Instant.class))).thenReturn(List.of(article));
+        var list = articleService.findAllByPublishDateBetween(today, sevenDaysBefore);
+        assertEquals(list.size(), 1);
     }
 
 
