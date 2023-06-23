@@ -21,9 +21,9 @@ public class ArticleController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "", consumes = {"application/json;charset=UTF-8"})
-    public ResponseEntity<Long> addArticle(@Valid @RequestBody Article article, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Long> addArticle(@RequestBody ArticleDto article, @AuthenticationPrincipal User user) {
         article.setPublisherUsername(user.getUsername());
-        return articleService.saveArticle(article);
+        return articleService.saveArticle(article.toEntity());
     }
 
     @PreAuthorize("permitAll()")

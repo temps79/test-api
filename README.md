@@ -10,3 +10,6 @@ Additionally, you are required to develop an endpoint for statistics that would 
 - The endpoint should return count of published articles on daily bases for the 7 days
 
 Please also write tests to verify that your code works.
+
+
+Swagger-ui: http://localhost:8080/swagger-ui/index.html

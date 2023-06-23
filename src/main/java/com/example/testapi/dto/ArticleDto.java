@@ -1,6 +1,7 @@
 package com.example.testapi.dto;
 
 import com.example.testapi.entity.Article;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,5 +37,9 @@ public class ArticleDto {
         this.content = article.getContent();
         this.publisherUsername = article.getPublisherUsername();
         this.publishDate = article.getPublishDate();
+    }
+
+    public Article toEntity() {
+        return new Article(id, title, author, content, publisherUsername, publishDate);
     }
 }

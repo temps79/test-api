@@ -32,9 +32,11 @@ public class ArticleService {
 
     private ArticleDto convertEntityToDto(Article article) {
         ArticleDto articleDto = new ArticleDto(article);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(article.getPublisherUsername());
-        if (userDetails != null) {
-            articleDto.setPublisher(new UserDto(userDetails));
+        if(article.getPublisherUsername()!=null){
+            UserDetails userDetails = userDetailsService.loadUserByUsername(article.getPublisherUsername());
+            if (userDetails != null) {
+                articleDto.setPublisher(new UserDto(userDetails));
+            }
         }
         return articleDto;
     }
