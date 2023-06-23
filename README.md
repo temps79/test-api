@@ -13,3 +13,10 @@ Please also write tests to verify that your code works.
 
 
 Swagger-ui: http://localhost:8080/swagger-ui/index.html
+
+To run, you need to 
+> `npm install`
+>
+> `build_DEV`
+> 
+> `mvn clean spring-boot:run`
