@@ -1,7 +1,7 @@
 drop table if exists article CASCADE;
 drop table if exists article_content CASCADE;
 drop sequence if exists hibernate_sequence;
-create sequence hibernate_sequence start with 1 increment by 1;
+create sequence hibernate_sequence start with 2 increment by 1;
 create table article
 (
     id           bigint not null,

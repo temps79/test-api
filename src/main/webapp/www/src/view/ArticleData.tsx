@@ -18,8 +18,10 @@ const ArticleData = () => {
             id: -1
         } as Article
         const [data, setData] = useState<Article>(emptyData)
-        const role = Number(localStorage.getItem('role'))
         const navigate = useHistory();
+        const role = Number(localStorage.getItem('role'))
+
+
         const loadData = () => {
             const user = JSON.parse(localStorage.getItem('user'))
             axios.get("/api/v1/article/" + params.id, {
@@ -37,9 +39,14 @@ const ArticleData = () => {
                 .catch(alert)
         }
         useEffect(() => {
-            if (!!params.id && Number(params.id) > 0) {
-                loadData()
+            if (role < 10) {
+                navigate.push('/login')
+            } else {
+                if (!!params.id && Number(params.id) > 0) {
+                    loadData()
+                }
             }
+
         }, [])
         const onChanged = (field: string) => (e: any) => {
             const newState = {...data}
@@ -74,6 +81,7 @@ const ArticleData = () => {
                 }
             }).catch(alert)
         }
+
         return (
             <div>
                 <div>
@@ -83,7 +91,7 @@ const ArticleData = () => {
                     <div>
                         {data.id > 0 &&
                             <div>
-                                Id:<a href={'/cp/article/' + data.id}>{data.id}</a>
+                                Id:<a href={'/cp/article/o_' + data.id}>{data.id}</a>
                             </div>
                         }
                         <div>

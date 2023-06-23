@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {Article} from "../Types";
+import {useHistory} from "react-router-dom";
 
 const Articles = () => {
     const [list, setList] = useState<Article[]>([])
+    const navigate = useHistory();
     const role = Number(localStorage.getItem('role'))
     const loadList = () => {
         const user = JSON.parse(localStorage.getItem('user'))
@@ -24,7 +26,11 @@ const Articles = () => {
 
 
     useEffect(() => {
-        loadList()
+        if (role < 10) {
+            navigate.push('/login')
+        } else {
+            loadList()
+        }
     }, [])
     return (
         <div>
@@ -57,7 +63,7 @@ const Articles = () => {
                     )}
                     </div>
                     <div>
-                        Publish date:{value.publishDate}
+                        Publish date:{new Date(value.publishDate ).toDateString()}
                     </div>
                 </div>
             )}

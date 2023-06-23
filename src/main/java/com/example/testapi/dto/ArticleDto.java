@@ -1,7 +1,9 @@
 package com.example.testapi.dto;
 
 import com.example.testapi.entity.Article;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,8 +40,20 @@ public class ArticleDto {
         this.publisherUsername = article.getPublisherUsername();
         this.publishDate = article.getPublishDate();
     }
-
+    @JsonIgnore
     public Article toEntity() {
         return new Article(id, title, author, content, publisherUsername, publishDate);
+    }
+    @JsonIgnore
+    public Instant getPublishDate() {
+        return publishDate;
+    }
+    @JsonGetter("publishDate")
+    public long getPublishDateTime() {
+        return publishDate.toEpochMilli();
+    }
+    @JsonSetter("publishDate")
+    public void setPublishDate(Long publishDate) {
+        this.publishDate = Instant.ofEpochMilli(publishDate);
     }
 }

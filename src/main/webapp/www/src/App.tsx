@@ -22,9 +22,6 @@ const App = () => {
     return (
         <div>
             <BrowserRouter>
-                <Route exact path={'/login*'}>
-                    <Login/>
-                </Route>
                 <Route exact path={'/cp/articles*'}>
                     <Articles/>
                 </Route>
@@ -37,10 +34,16 @@ const App = () => {
                     <div>
                         <a href={'/logout'} onClick={event => {
                             localStorage.removeItem('user')
+                            localStorage.setItem('role', '0')
                             window.dispatchEvent(new Event("storage"));
                         }}>Out
                         </a>
                     </div>
+                }
+                {needUpdate > 0 && !localStorage.getItem('user') &&
+                    <Route exact path={'/*'}>
+                        <Login/>
+                    </Route>
                 }
             </BrowserRouter>
         </div>
